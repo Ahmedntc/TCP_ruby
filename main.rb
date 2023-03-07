@@ -73,3 +73,32 @@ class TCP
         @estado = "CLOSED" 
     end
 end
+
+tcp = TCP.new()
+print("\nEstado: " + String(tcp.estado) + "\n\n")
+
+input = ""
+  
+loop do 
+  if (["SYN_SENT", "SYN_RCVD", "TIME_WAIT"]).include? tcp.estado
+    begin
+      Timeout::timeout(100){
+        print("Envie um Comando: ")
+        input = gets()
+        print("\nRetornado: " + tcp.recv(input) + "\n\n")
+      }
+    
+    rescue Timeout::Error
+      print("\nTIMEOUT\n")
+      tcp.estado = "CLOSED"
+    end
+         
+    else
+      print("\nEnvie um Comando: ")
+      input = gets()
+      print("\nRetornado: " + tcp.recv(input) + "\n\n")
+      print("Estado da maquina: " + tcp.estado + "\n\n")
+
+  end
+end
+end
