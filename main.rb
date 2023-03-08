@@ -36,6 +36,9 @@ class TCP
 
       in["SYN_RCVD", "close"]
         @estado = "FIN_WAIT_1"
+      
+      in["SYN_SENT", "close"]
+        @estado = "CLOSED"
 
       in ["ESTABLISHED", "close"]
         @estado = "FIN_WAIT_1"
@@ -71,6 +74,7 @@ class TCP
 
       in ["LAST_ACK", "ACK"]
         @estado = "CLOSED" 
+      
     end
 end
 
@@ -82,7 +86,7 @@ input = ""
 loop do 
   if (["SYN_SENT", "SYN_RCVD", "TIME_WAIT"]).include? tcp.estado
     begin
-      Timeout::timeout(100){
+      Timeout::timeout(20){
         print("Envie um Comando: ")
         input = gets()
         print("\nRetornado: " + tcp.recv(input) + "\n\n")
